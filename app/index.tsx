@@ -1,19 +1,5 @@
-import { Stack } from "expo-router";
-import { useState } from "react";
-import Home from "./home";
-import Login from "./login";
+import { Redirect } from "expo-router";
 
 export default function Index() {
-  const [user, setUser] = useState(null);
-
-  return (
-    <>
-      <Stack screenOptions={{ headerShown: false }} />
-
-      {user 
-        ? <Home user={user} setUser={setUser} /> 
-        : <Login setUser={setUser} />
-      }
-    </>
-  );
+  return <Redirect href="/(auth)/login" />;
 }
