@@ -22,7 +22,7 @@ export default function Login() {
       Alert.alert("Errore", "La password deve essere di almeno 6 caratteri");
       return;
     }
-    setUser({ nome, cognome, email });
+    setUser({ nome, cognome, email, ruolo: "dipendente" });
   };
 
   return (
@@ -76,21 +76,37 @@ export default function Login() {
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        onPress={() => setUser({ nome: "Test", cognome: "Utente", email: "test@test.it" })}
-        style={{
-          width: "100%",
-          padding: 12,
-          borderRadius: 10,
-          marginTop: 10,
-          borderWidth: 1,
-          borderColor: "#374151",
-        }}
-      >
-        <Text style={{ color: "#94a3b8", textAlign: "center" }}>
-          Accesso rapido (test)
-        </Text>
-      </TouchableOpacity>
+      <View style={{ flexDirection: "row", gap: 10, width: "100%", marginTop: 10 }}>
+        <TouchableOpacity
+          onPress={() => setUser({ nome: "Admin", cognome: "Test", email: "admin@test.it", ruolo: "admin" })}
+          style={{
+            flex: 1,
+            padding: 12,
+            borderRadius: 10,
+            borderWidth: 1,
+            borderColor: "#2563eb",
+          }}
+        >
+          <Text style={{ color: "#2563eb", textAlign: "center", fontSize: 12 }}>
+            Test Admin
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => setUser({ nome: "Mario", cognome: "Rossi", email: "mario@test.it", ruolo: "dipendente" })}
+          style={{
+            flex: 1,
+            padding: 12,
+            borderRadius: 10,
+            borderWidth: 1,
+            borderColor: "#374151",
+          }}
+        >
+          <Text style={{ color: "#94a3b8", textAlign: "center", fontSize: 12 }}>
+            Test Dipendente
+          </Text>
+        </TouchableOpacity>
+      </View>
 
     </View>
   );

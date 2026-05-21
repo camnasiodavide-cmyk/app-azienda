@@ -4,6 +4,7 @@ type User = {
   nome: string;
   cognome: string;
   email: string;
+  ruolo: "admin" | "dipendente";
 };
 
 type UserContextType = {
