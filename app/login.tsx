@@ -21,7 +21,7 @@ export default function Login({ setUser }) {
         color: "white",
         marginBottom: 30
       }}>
-        Login Aziendale
+        App Aziendale
       </Text>
 
       <TextInput
