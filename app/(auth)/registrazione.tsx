@@ -1,7 +1,7 @@
 import { useUser } from "@/context/UserContext";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Alert, ScrollView, Text, TextInput, TouchableOpacity } from "react-native";
+import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 export default function Registrazione() {
   const { setUser } = useUser();
@@ -12,6 +12,7 @@ export default function Registrazione() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confermaPassword, setConfermaPassword] = useState("");
+  const [sede, setSede] = useState<"Cosmelux" | "Indeco" | null>(null);
 
   const handleRegistrazione = () => {
     if (!nome.trim() || !cognome.trim()) {
@@ -30,27 +31,21 @@ export default function Registrazione() {
       Alert.alert("Errore", "Le password non coincidono");
       return;
     }
-    setUser({ nome, cognome, email, ruolo: "dipendente" });
+    if (!sede) {
+      Alert.alert("Errore", "Seleziona la tua azienda");
+      return;
+    }
+    setUser({ nome, cognome, email, ruolo: "dipendente", sede });
   };
 
-  const fields = [
-    { placeholder: "Nome", value: nome, onChange: setNome, secure: false },
-    { placeholder: "Cognome", value: cognome, onChange: setCognome, secure: false },
-    { placeholder: "Email", value: email, onChange: setEmail, secure: false },
-    { placeholder: "Password (min. 6 caratteri)", value: password, onChange: setPassword, secure: true },
-    { placeholder: "Conferma password", value: confermaPassword, onChange: setConfermaPassword, secure: true },
-  ];
-
   return (
-    <ScrollView
-      contentContainerStyle={{
-        flexGrow: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#0f172a",
-        padding: 20,
-      }}
-    >
+    <ScrollView contentContainerStyle={{
+      flexGrow: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "#0f172a",
+      padding: 20,
+    }}>
       <Text style={{ fontSize: 28, color: "white", marginBottom: 6, fontWeight: "bold" }}>
         Registrazione
       </Text>
@@ -58,7 +53,13 @@ export default function Registrazione() {
         Crea il tuo account aziendale
       </Text>
 
-      {fields.map(({ placeholder, value, onChange, secure }) => (
+      {[
+        { placeholder: "Nome", value: nome, onChange: setNome, secure: false },
+        { placeholder: "Cognome", value: cognome, onChange: setCognome, secure: false },
+        { placeholder: "Email aziendale", value: email, onChange: setEmail, secure: false },
+        { placeholder: "Password (min. 6 caratteri)", value: password, onChange: setPassword, secure: true },
+        { placeholder: "Conferma password", value: confermaPassword, onChange: setConfermaPassword, secure: true },
+      ].map(({ placeholder, value, onChange, secure }) => (
         <TextInput
           key={placeholder}
           placeholder={placeholder}
@@ -78,6 +79,37 @@ export default function Registrazione() {
         />
       ))}
 
+      {/* Scelta sede */}
+      <Text style={{ color: "#94a3b8", fontSize: 12, alignSelf: "flex-start", marginBottom: 8, marginTop: 4, letterSpacing: 1 }}>
+        SEDE
+      </Text>
+      <View style={{ flexDirection: "row", gap: 10, width: "100%", marginBottom: 20 }}>
+        {(["Cosmelux", "Indeco"] as const).map((s) => (
+          <TouchableOpacity
+            key={s}
+            onPress={() => setSede(s)}
+            style={{
+              flex: 1,
+              padding: 14,
+              borderRadius: 10,
+              backgroundColor: sede === s ? "#2563eb" : "#1e293b",
+              borderWidth: 1,
+              borderColor: sede === s ? "#2563eb" : "#374151",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ fontSize: 16, marginBottom: 2 }}>🏢</Text>
+            <Text style={{
+              color: sede === s ? "white" : "#94a3b8",
+              fontWeight: "bold",
+              fontSize: 14,
+            }}>
+              {s}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
       <TouchableOpacity
         onPress={handleRegistrazione}
         style={{
@@ -85,7 +117,7 @@ export default function Registrazione() {
           width: "100%",
           padding: 15,
           borderRadius: 10,
-          marginTop: 10,
+          marginTop: 4,
         }}
       >
         <Text style={{ color: "white", textAlign: "center", fontSize: 16, fontWeight: "bold" }}>
