@@ -5,7 +5,36 @@ import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 export default function Home() {
   const { user, setUser } = useUser();
   const router = useRouter();
+
+  const isSuperAdmin = user?.ruolo === "superadmin";
   const isAdmin = user?.ruolo === "admin";
+  const isDipendente = user?.ruolo === "dipendente";
+
+  const badgeColor = isSuperAdmin ? "#7c3aed" : isAdmin ? "#1e40af" : "#1e293b";
+  const badgeTextColor = isSuperAdmin ? "#a78bfa" : isAdmin ? "#93c5fd" : "#94a3b8";
+  const badgeLabel = isSuperAdmin ? "Super Admin" : isAdmin ? "Amministratore" : "Dipendente";
+
+  const MenuItem = ({ title, subtitle, route }: { title: string; subtitle: string; route: string }) => (
+    <TouchableOpacity
+      onPress={() => router.push(route)}
+      style={{
+        backgroundColor: "#1e293b",
+        padding: 16,
+        borderRadius: 12,
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 12,
+        borderLeftWidth: 3,
+        borderLeftColor: "#2563eb",
+      }}
+    >
+      <View style={{ flex: 1 }}>
+        <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>{title}</Text>
+        <Text style={{ color: "#94a3b8", fontSize: 12, marginTop: 2 }}>{subtitle}</Text>
+      </View>
+      <Text style={{ color: "#2563eb", fontSize: 20 }}>›</Text>
+    </TouchableOpacity>
+  );
 
   return (
     <ScrollView contentContainerStyle={{
@@ -18,113 +47,89 @@ export default function Home() {
       {/* Header */}
       <View style={{ marginBottom: 32 }}>
         <Text style={{ fontSize: 14, color: "#94a3b8", marginBottom: 4 }}>
-          {isAdmin ? "Pannello Admin" : "Benvenuto"}
+          {isSuperAdmin ? "Pannello Super Admin" : isAdmin ? "Pannello Admin" : "Benvenuto"}
         </Text>
         <Text style={{ fontSize: 26, color: "white", fontWeight: "bold" }}>
           {user?.nome} {user?.cognome}
         </Text>
-        <View style={{
-          marginTop: 8,
-          alignSelf: "flex-start",
-          backgroundColor: isAdmin ? "#1e40af" : "#1e293b",
-          paddingHorizontal: 10,
-          paddingVertical: 4,
-          borderRadius: 20,
-        }}>
-          <Text style={{ color: isAdmin ? "#93c5fd" : "#94a3b8", fontSize: 12 }}>
-            {isAdmin ? "Amministratore" : "Dipendente"}
-          </Text>
+        <View style={{ flexDirection: "row", gap: 8, marginTop: 8 }}>
+          <View style={{
+            alignSelf: "flex-start",
+            backgroundColor: badgeColor,
+            paddingHorizontal: 10,
+            paddingVertical: 4,
+            borderRadius: 20,
+          }}>
+            <Text style={{ color: badgeTextColor, fontSize: 12 }}>{badgeLabel}</Text>
+          </View>
+          {!isSuperAdmin && (
+            <View style={{
+              alignSelf: "flex-start",
+              backgroundColor: "#1e293b",
+              paddingHorizontal: 10,
+              paddingVertical: 4,
+              borderRadius: 20,
+              borderWidth: 1,
+              borderColor: "#374151",
+            }}>
+              <Text style={{ color: "#94a3b8", fontSize: 12 }}>🏢 {user?.sede}</Text>
+            </View>
+          )}
         </View>
       </View>
 
-      {/* Sezione admin extra */}
-      {isAdmin && (
-        <View style={{ marginBottom: 24 }}>
+      {/* ── SUPERADMIN ── */}
+      {isSuperAdmin && (
+        <>
           <Text style={{ color: "#94a3b8", fontSize: 12, marginBottom: 10, letterSpacing: 1 }}>
-            GESTIONE
+            GESTIONE GLOBALE
           </Text>
-          <TouchableOpacity
-            onPress={() => router.push("/admin/utenti")}
-            style={{
-              backgroundColor: "#1e293b",
-              padding: 16,
-              borderRadius: 12,
-              flexDirection: "row",
-              alignItems: "center",
-              borderLeftWidth: 3,
-              borderLeftColor: "#2563eb",
-            }}
-          >
-            <View style={{ flex: 1 }}>
-              <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
-                Gestione Utenti
-              </Text>
-              <Text style={{ color: "#94a3b8", fontSize: 12, marginTop: 2 }}>
-                Visualizza, promuovi ed elimina utenti
-              </Text>
-            </View>
-            <Text style={{ color: "#2563eb", fontSize: 20 }}>›</Text>
-          </TouchableOpacity>
-        </View>
+          <MenuItem title="Gestione Utenti" subtitle="Tutti gli utenti di Cosmelux e Indeco" route="/admin/utenti" />
+          <MenuItem title="Comunicazioni" subtitle="Pubblica su Cosmelux, Indeco o entrambe" route="/comunicazioni" />
+          <MenuItem title="Turni" subtitle="Carica i turni per entrambe le sedi" route="/turni" />
+          <MenuItem title="Segnalazioni" subtitle="Invia o leggi le segnalazioni di tutte le sedi" route="/segnalazioni" />
+          <MenuItem title="Giornalino Aziendale" subtitle="Gestisci il giornalino per tutte le sedi" route="/giornalino" />
+        </>
       )}
 
-      {/* Sezione principale */}
-      <Text style={{ color: "#94a3b8", fontSize: 12, marginBottom: 10, letterSpacing: 1 }}>
-        {isAdmin ? "STRUMENTI" : "MENU"}
-      </Text>
+      {/* ── ADMIN ── */}
+      {isAdmin && (
+        <>
+          <Text style={{ color: "#94a3b8", fontSize: 12, marginBottom: 10, letterSpacing: 1 }}>
+            GESTIONE — {user?.sede?.toUpperCase()}
+          </Text>
+          <MenuItem title="Gestione Utenti" subtitle={`Utenti della sede ${user?.sede}`} route="/admin/utenti" />
+          <View style={{ height: 1, backgroundColor: "#1e293b", marginVertical: 16 }} />
+          <Text style={{ color: "#94a3b8", fontSize: 12, marginBottom: 10, letterSpacing: 1 }}>
+            STRUMENTI
+          </Text>
+          <MenuItem title="Comunicazioni" subtitle="Pubblica comunicazioni ai dipendenti" route="/comunicazioni" />
+          <MenuItem title="Turni" subtitle={`Carica i turni per ${user?.sede}`} route="/turni" />
+          <MenuItem title="Richieste" subtitle="Gestisci le richieste ricevute" route="/richieste" />
+          <MenuItem title="Segnalazioni" subtitle="Leggi le segnalazioni ricevute" route="/segnalazioni" />
+          <MenuItem title="Giornalino Aziendale" subtitle="Leggi le ultime notizie aziendali" route="/giornalino" />
+        </>
+      )}
 
-      <TouchableOpacity
-        onPress={() => router.push("/comunicazioni")}
-        style={{
-          backgroundColor: "#1e293b",
-          padding: 16,
-          borderRadius: 12,
-          flexDirection: "row",
-          alignItems: "center",
-          marginBottom: 12,
-          borderLeftWidth: 3,
-          borderLeftColor: "#2563eb",
-        }}
-      >
-        <View style={{ flex: 1 }}>
-          <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
-            Comunicazioni
+      {/* ── DIPENDENTE ── */}
+      {isDipendente && (
+        <>
+          <Text style={{ color: "#94a3b8", fontSize: 12, marginBottom: 10, letterSpacing: 1 }}>
+            MENU
           </Text>
-          <Text style={{ color: "#94a3b8", fontSize: 12, marginTop: 2 }}>
-            {isAdmin ? "Pubblica comunicazioni ai dipendenti" : "Leggi le comunicazioni aziendali"}
-          </Text>
-        </View>
-        <Text style={{ color: "#2563eb", fontSize: 20 }}>›</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={() => router.push("/richieste")}
-        style={{
-          backgroundColor: "#1e293b",
-          padding: 16,
-          borderRadius: 12,
-          flexDirection: "row",
-          alignItems: "center",
-          marginBottom: 32,
-          borderLeftWidth: 3,
-          borderLeftColor: "#2563eb",
-        }}
-      >
-        <View style={{ flex: 1 }}>
-          <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
-            Richieste
-          </Text>
-          <Text style={{ color: "#94a3b8", fontSize: 12, marginTop: 2 }}>
-            {isAdmin ? "Gestisci le richieste dei dipendenti" : "Invia una nuova richiesta"}
-          </Text>
-        </View>
-        <Text style={{ color: "#2563eb", fontSize: 20 }}>›</Text>
-      </TouchableOpacity>
+          <MenuItem title="Comunicazioni" subtitle="Leggi le comunicazioni aziendali" route="/comunicazioni" />
+          <MenuItem title="Turni" subtitle="Visualizza i tuoi turni" route="/turni" />
+          <MenuItem title="Richieste" subtitle="Invia una nuova richiesta" route="/richieste" />
+          <MenuItem title="Segnalazioni" subtitle="Invia una segnalazione anonima o firmata" route="/segnalazioni" />
+          <MenuItem title="Giornalino Aziendale" subtitle="Leggi le ultime notizie aziendali" route="/giornalino" />
+        </>
+      )}
 
       {/* Logout */}
       <TouchableOpacity
         onPress={() => setUser(null)}
         style={{
+          marginTop: 20,
           backgroundColor: "#1e293b",
           padding: 14,
           borderRadius: 12,

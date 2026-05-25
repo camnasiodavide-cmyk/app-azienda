@@ -1,10 +1,14 @@
 import { createContext, useContext, useState } from "react";
 
+type Ruolo = "superadmin" | "admin" | "dipendente";
+type Sede = "Cosmelux" | "Indeco";
+
 type User = {
   nome: string;
   cognome: string;
   email: string;
-  ruolo: "admin" | "dipendente";
+  ruolo: Ruolo;
+  sede: Sede;
 };
 
 type UserContextType = {

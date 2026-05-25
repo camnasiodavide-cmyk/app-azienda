@@ -1,7 +1,7 @@
 import { useUser } from "@/context/UserContext";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 export default function Login() {
   const { setUser } = useUser();
@@ -18,13 +18,12 @@ export default function Login() {
       Alert.alert("Errore", "La password deve essere di almeno 6 caratteri");
       return;
     }
-    // Con Firebase qui faremo la vera autenticazione
     Alert.alert("Info", "Autenticazione reale disponibile dopo integrazione Firebase");
   };
 
   return (
-    <View style={{
-      flex: 1,
+    <ScrollView contentContainerStyle={{
+      flexGrow: 1,
       justifyContent: "center",
       alignItems: "center",
       backgroundColor: "#0f172a",
@@ -38,7 +37,7 @@ export default function Login() {
       </Text>
 
       <TextInput
-        placeholder="Email"
+        placeholder="Email aziendale"
         placeholderTextColor="#aaa"
         value={email}
         onChangeText={setEmail}
@@ -94,32 +93,74 @@ export default function Login() {
       </TouchableOpacity>
 
       {/* Bottoni test — da rimuovere dopo Firebase */}
-      <View style={{ flexDirection: "row", gap: 10, width: "100%", marginTop: 30 }}>
+      <Text style={{ color: "#475569", fontSize: 11, marginTop: 30, marginBottom: 10 }}>
+        ACCESSO RAPIDO TEST
+      </Text>
+
+      <TouchableOpacity
+        onPress={() => setUser({ nome: "Super", cognome: "Admin", email: "super@test.it", ruolo: "superadmin", sede: "Cosmelux" })}
+        style={{
+          width: "100%", padding: 12, borderRadius: 10, marginBottom: 8,
+          borderWidth: 1, borderColor: "#7c3aed",
+        }}
+      >
+        <Text style={{ color: "#a78bfa", textAlign: "center", fontSize: 12 }}>
+          👑 Super Admin
+        </Text>
+      </TouchableOpacity>
+
+      <View style={{ flexDirection: "row", gap: 8, width: "100%", marginBottom: 8 }}>
         <TouchableOpacity
-          onPress={() => setUser({ nome: "Admin", cognome: "Test", email: "admin@test.it", ruolo: "admin" })}
+          onPress={() => setUser({ nome: "Admin", cognome: "Cosmelux", email: "admin@cosmelux.it", ruolo: "admin", sede: "Cosmelux" })}
           style={{
             flex: 1, padding: 12, borderRadius: 10,
             borderWidth: 1, borderColor: "#2563eb",
           }}
         >
-          <Text style={{ color: "#2563eb", textAlign: "center", fontSize: 12 }}>
-            Test Admin
+          <Text style={{ color: "#93c5fd", textAlign: "center", fontSize: 11 }}>
+            🏢 Admin Cosmelux
           </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => setUser({ nome: "Mario", cognome: "Rossi", email: "mario@test.it", ruolo: "dipendente" })}
+          onPress={() => setUser({ nome: "Admin", cognome: "Indeco", email: "admin@indeco.it", ruolo: "admin", sede: "Indeco" })}
+          style={{
+            flex: 1, padding: 12, borderRadius: 10,
+            borderWidth: 1, borderColor: "#2563eb",
+          }}
+        >
+          <Text style={{ color: "#93c5fd", textAlign: "center", fontSize: 11 }}>
+            🏢 Admin Indeco
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={{ flexDirection: "row", gap: 8, width: "100%" }}>
+        <TouchableOpacity
+          onPress={() => setUser({ nome: "Mario", cognome: "Rossi", email: "mario@cosmelux.it", ruolo: "dipendente", sede: "Cosmelux" })}
           style={{
             flex: 1, padding: 12, borderRadius: 10,
             borderWidth: 1, borderColor: "#374151",
           }}
         >
-          <Text style={{ color: "#94a3b8", textAlign: "center", fontSize: 12 }}>
-            Test Dipendente
+          <Text style={{ color: "#94a3b8", textAlign: "center", fontSize: 11 }}>
+            👤 Dipendente Cosmelux
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => setUser({ nome: "Luca", cognome: "Bianchi", email: "luca@indeco.it", ruolo: "dipendente", sede: "Indeco" })}
+          style={{
+            flex: 1, padding: 12, borderRadius: 10,
+            borderWidth: 1, borderColor: "#374151",
+          }}
+        >
+          <Text style={{ color: "#94a3b8", textAlign: "center", fontSize: 11 }}>
+            👤 Dipendente Indeco
           </Text>
         </TouchableOpacity>
       </View>
 
-    </View>
+    </ScrollView>
   );
 }
