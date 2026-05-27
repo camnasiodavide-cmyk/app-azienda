@@ -35,21 +35,21 @@ export default function GestioneUtenti() {
 
   const handleCambiaRuolo = (nuovoRuolo: Ruolo) => {
     if (!utenteSelezionato) return;
-    Alert.alert("Cambia ruolo", `Vuoi impostare il ruolo di ${utenteSelezionato.nome} ${utenteSelezionato.cognome} a "${nuovoRuolo}"?`, [
+    Alert.alert("Cambia ruolo", `Vuoi impostare il ruolo di ${utenteSelezionato.nome} a "${nuovoRuolo}"?`, [
       { text: "Annulla", style: "cancel", onPress: () => setModalVisible(false) },
       { text: "Conferma", onPress: () => { setUtenti(utenti.map((u) => u.id === utenteSelezionato.id ? { ...u, ruolo: nuovoRuolo } : u)); setModalVisible(false); setUtenteSelezionato(null); } },
     ]);
   };
 
   const handleToggleAttivo = (u: Utente) => {
-    Alert.alert(u.attivo ? "Sospendi utente" : "Riattiva utente", `Vuoi ${u.attivo ? "sospendere" : "riattivare"} ${u.nome} ${u.cognome}?`, [
+    Alert.alert(u.attivo ? "Sospendi" : "Riattiva", `Vuoi ${u.attivo ? "sospendere" : "riattivare"} ${u.nome} ${u.cognome}?`, [
       { text: "Annulla", style: "cancel" },
       { text: "Conferma", style: u.attivo ? "destructive" : "default", onPress: () => setUtenti(utenti.map((ut) => ut.id === u.id ? { ...ut, attivo: !ut.attivo } : ut)) },
     ]);
   };
 
   const handleElimina = (u: Utente) => {
-    Alert.alert("Elimina utente", `Sei sicuro di voler eliminare ${u.nome} ${u.cognome}?`, [
+    Alert.alert("Elimina", `Sei sicuro di voler eliminare ${u.nome} ${u.cognome}?`, [
       { text: "Annulla", style: "cancel" },
       { text: "Elimina", style: "destructive", onPress: () => setUtenti(utenti.filter((ut) => ut.id !== u.id)) },
     ]);
@@ -72,9 +72,8 @@ export default function GestioneUtenti() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#0f172a" }}>
+      <Header titolo="Gestione Utenti" sottotitolo={isSuperAdmin ? "Tutti gli utenti aziendali" : `Utenti — ${user?.sede}`} />
       <ScrollView contentContainerStyle={{ padding: 20 }}>
-
-        <Header titolo="Gestione Utenti" sottotitolo={isSuperAdmin ? "Tutti gli utenti aziendali" : `Utenti — ${user?.sede}`} />
 
         {isSuperAdmin && (
           <View style={{ flexDirection: "row", gap: 10, marginBottom: 20 }}>

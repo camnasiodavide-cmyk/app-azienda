@@ -14,12 +14,12 @@ export default function Richieste() {
   const isDipendente = user?.ruolo === "dipendente";
 
   const [text, setText] = useState("");
-  const [requests, setRequests] = useState([]);
+  const [requests, setRequests] = useState<{id: string; text: string; nome: string; cognome: string; sede: string; data: string; stato: string}[]>([]);
 
   const addRequest = () => {
     if (!text.trim()) return;
     Keyboard.dismiss();
-    setRequests([{ id: Date.now().toString(), text, nome: user?.nome, cognome: user?.cognome, sede: user?.sede, data: new Date().toLocaleDateString("it-IT"), stato: "In attesa" }, ...requests]);
+    setRequests([{ id: Date.now().toString(), text, nome: user?.nome || "", cognome: user?.cognome || "", sede: user?.sede || "", data: new Date().toLocaleDateString("it-IT"), stato: "In attesa" }, ...requests]);
     setText("");
   };
 
@@ -35,11 +35,9 @@ export default function Richieste() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#0f172a" }}>
+      <Header titolo="Richieste" sottotitolo={isSuperAdmin || isAdmin ? "Richieste ricevute" : "Le mie richieste"} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{ flex: 1, padding: 20 }}>
-
-          <Header titolo="Richieste" sottotitolo={isSuperAdmin || isAdmin ? "Richieste ricevute" : "Le mie richieste"} />
-
           {isDipendente && (
             <View style={{ marginBottom: 16 }}>
               <TextInput value={text} onChangeText={setText} placeholder="Scrivi una richiesta..." placeholderTextColor="#aaa" multiline

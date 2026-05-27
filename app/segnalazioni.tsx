@@ -40,10 +40,9 @@ export default function Segnalazioni() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#0f172a" }}>
+      <Header titolo="Segnalazioni" sottotitolo={canView ? "Segnalazioni ricevute" : "Invia una segnalazione"} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView contentContainerStyle={{ padding: 20 }} keyboardShouldPersistTaps="handled">
-
-          <Header titolo="Segnalazioni" sottotitolo={canView ? "Segnalazioni ricevute" : "Invia una segnalazione"} />
 
           {!isAdmin && (
             <View style={{ marginBottom: 24 }}>

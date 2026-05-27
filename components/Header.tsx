@@ -10,14 +10,25 @@ export default function Header({ titolo, sottotitolo }: Props) {
   const router = useRouter();
 
   return (
-    <View style={{ marginBottom: 20 }}>
+    <View style={{ paddingHorizontal: 20, paddingTop: 16, paddingBottom: 12, backgroundColor: "#0f172a" }}>
       <TouchableOpacity
         onPress={() => router.back()}
-        style={{ flexDirection: "row", alignItems: "center", marginBottom: 16 }}
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          alignSelf: "flex-start",
+          backgroundColor: "#1e293b",
+          paddingHorizontal: 14,
+          paddingVertical: 10,
+          borderRadius: 20,
+          marginBottom: 16,
+          gap: 6,
+        }}
       >
-        <Text style={{ color: "#2563eb", fontSize: 22, marginRight: 6 }}>‹</Text>
-        <Text style={{ color: "#2563eb", fontSize: 15 }}>Indietro</Text>
+        <Text style={{ color: "white", fontSize: 18, lineHeight: 22 }}>‹</Text>
+        <Text style={{ color: "white", fontSize: 15, fontWeight: "600" }}>Indietro</Text>
       </TouchableOpacity>
+
       <Text style={{ fontSize: 26, color: "white", fontWeight: "bold", marginBottom: 4 }}>
         {titolo}
       </Text>
